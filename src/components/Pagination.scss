@@ -1,0 +1,20 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .pagination_element {
+    border: none;
+    color: var(--black);
+    width: 2rem;
+    height: 2rem;
+    margin: 0.5rem;
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+  }
+
+  .active_page {
+    background-color: #999;
+  }
+}

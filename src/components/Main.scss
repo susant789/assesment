@@ -1,0 +1,46 @@
+.main_container {
+  width: 100%;
+  display: flex;
+  margin: 2rem 0;
+  padding: 0 1.5rem;
+
+  .left {
+    flex: 0.15;
+
+    .list_heading {
+      font-weight: 600;
+      padding: 0.8rem 0;
+    }
+
+    > div {
+      margin-top: 1rem;
+    }
+
+    .list {
+      padding: 0.2rem 0;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .list:hover {
+      font-weight: 600;
+    }
+
+    .list_active {
+      font-weight: 600;
+    }
+  }
+
+  .right {
+    flex: 1;
+
+    .products_container {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: start;
+      align-items: center;
+    }
+  }
+}

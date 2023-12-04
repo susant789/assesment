@@ -1,0 +1,36 @@
+footer {
+  padding: 3rem;
+  background-color: #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  img {
+    margin-bottom: 1rem;
+  }
+
+  .footer_nav {
+    padding: 0.2rem 0;
+  }
+
+  .footer_middle {
+    p {
+      max-width: 58rem;
+    }
+  }
+
+  .footer_nav {
+    transition: all .2s;
+  }
+  .footer_nav:hover {
+    color: #ffff;
+  }
+}
+
+footer * {
+  color: #fff;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #fff9;
+  cursor: pointer;
+}
