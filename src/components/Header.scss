@@ -27,6 +27,7 @@
       img {
         width: 1.1rem;
         cursor: pointer;
+        margin-left: 2.5rem;
       }
 
       .white {
@@ -57,11 +58,6 @@
       }
       .non-active:hover {
         transform: scale(1.05);
-      }
-
-      .img_change {
-        filter: invert(100%);
-        margin-left: 2.5rem;
       }
     }
   }
@@ -100,4 +96,8 @@
       cursor: pointer;
     }
   }
+}
+
+.img_change {
+  filter: invert(100%);
 }

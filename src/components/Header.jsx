@@ -16,7 +16,7 @@ function Header({ scrollMain }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 655) {
+      if (window.scrollY > 680) {
         setHand(true);
       } else {
         setHand(false);
@@ -71,8 +71,12 @@ function Header({ scrollMain }) {
     <header>
       <div className="header">
         <nav>
-          <div className="nav_logo">
-            <img src={logo} alt="page logo" />
+          <div>
+            <img
+              className={hand ? "nav_logo img_change" : "nav_logo"}
+              src={logo}
+              alt="page logo"
+            />
           </div>
           <div className="nav_right">
             <p
