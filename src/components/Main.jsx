@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Main.scss";
-import {
-  fetchProducts,
-  fetchColors,
-  fetchMaterial,
-  fetchFeatured,
-} from "../services";
+import { fetchProducts, fetchColors, fetchMaterial } from "../services";
 import { useContext } from "react";
 import { AppContext } from "../Context";
 import { DATA, RESET_FILTERS } from "../constants";
@@ -17,7 +12,6 @@ function Main({ mainref }) {
   const [colorFilter, setColorFilter] = useState(null);
   const [materialFilter, setMaterialFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productPerPage, setProductPerPage] = useState(6);
 
   useEffect(() => {
     Promise.all([fetchProducts(), fetchColors(), fetchMaterial()]).then(
@@ -102,6 +96,7 @@ function Main({ mainref }) {
       : products;
   }
 
+  const productPerPage = 6;
   const lastPostIndex = currentPage * productPerPage;
   const firstPostIndex = lastPostIndex - productPerPage;
   const currentProducts = state.data.filtered.slice(
