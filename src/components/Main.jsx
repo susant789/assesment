@@ -8,11 +8,11 @@ import {
 } from "../services";
 import { useContext } from "react";
 import { AppContext } from "../Context";
-import { DATA } from "../constants";
+import { DATA, RESET_FILTERS } from "../constants";
 import Card from "./Card";
 import Pagination from "./Pagination";
 
-function Main() {
+function Main({ mainref }) {
   const { state, dispatch } = useContext(AppContext);
   const [colorFilter, setColorFilter] = useState(null);
   const [materialFilter, setMaterialFilter] = useState(null);
@@ -20,46 +20,86 @@ function Main() {
   const [productPerPage, setProductPerPage] = useState(6);
 
   useEffect(() => {
-    Promise.all([
-      fetchProducts(),
-      fetchColors(),
-      fetchMaterial(),
-      fetchFeatured(),
-    ]).then(([products, colors, materials, featured]) => {
-      dispatch({
-        type: DATA,
-        payload: { products, colors, materials, featured, filtered: products },
-      });
-    });
+    Promise.all([fetchProducts(), fetchColors(), fetchMaterial()]).then(
+      ([products, colors, materials]) => {
+        dispatch({
+          type: DATA,
+          payload: {
+            products,
+            colors,
+            materials,
+            featured: [],
+            filtered: products,
+          },
+        });
+      }
+    );
   }, []);
+
+  useEffect(() => {
+    if (state.resetFilters === true) {
+      setMaterialFilter(null);
+      setColorFilter(null);
+    }
+  }, [state.resetFilters]);
+
+  const toBeFiltered = () => {
+    return state.data.featured.length
+      ? state.data.featured
+      : state.data.products;
+  };
 
   function handleColorFilter(colorId) {
     setColorFilter(colorId);
-    const filtered = state.data.products.filter(
+
+    const filtered = toBeFiltered().filter(
       (product) =>
         product.colorId === colorId &&
         (!materialFilter || product.materialId === materialFilter)
     );
     dispatch({ type: DATA, payload: { ...state.data, filtered: filtered } });
+    dispatch({ type: RESET_FILTERS, payload: false });
   }
 
   function handleMaterialFilter(materialId) {
     setMaterialFilter(materialId);
-    const filtered = state.data.products.filter(
+
+    const filtered = toBeFiltered().filter(
       (product) =>
         product.materialId === materialId &&
         (!colorFilter || product.colorId === colorFilter)
     );
     dispatch({ type: DATA, payload: { ...state.data, filtered: filtered } });
+    dispatch({ type: RESET_FILTERS, payload: false });
   }
 
-  function handleAll() {
-    setMaterialFilter(null);
-    setColorFilter(null);
+  function handleAll(filterType) {
+    let filteredProducts;
+
+    if (filterType === "color") {
+      setColorFilter(null);
+      filteredProducts = applyMaterialFilter(toBeFiltered(), materialFilter);
+    } else {
+      setMaterialFilter(null);
+      filteredProducts = applyColorFilter(toBeFiltered(), colorFilter);
+    }
+
     dispatch({
       type: DATA,
-      payload: { ...state.data, filtered: state.data.products },
+      payload: { ...state.data, filtered: filteredProducts },
     });
+  }
+
+  function applyMaterialFilter(products, materialFilter) {
+    return materialFilter
+      ? products.filter((product) => product.materialId === materialFilter)
+      : products;
+  }
+
+  function applyColorFilter(products, colorFilter) {
+    return colorFilter
+      ? products.filter((product) => product.colorId === colorFilter)
+      : products;
   }
 
   const lastPostIndex = currentPage * productPerPage;
@@ -77,9 +117,11 @@ function Main() {
           <p className="list_heading">Materials</p>
           <p
             className={
-              !colorFilter && !materialFilter ? "list list_active" : "list"
+              !materialFilter || state.resetFilters
+                ? "list list_active"
+                : "list"
             }
-            onClick={handleAll}
+            onClick={() => handleAll("material")}
           >
             All
           </p>
@@ -89,7 +131,9 @@ function Main() {
                 onClick={() => handleMaterialFilter(material.id)}
                 key={material.id}
                 className={
-                  material.id === materialFilter ? "list list_active" : "list"
+                  material.id === materialFilter && !state.resetFilters
+                    ? "list list_active"
+                    : "list"
                 }
               >
                 {material.name}
@@ -101,9 +145,9 @@ function Main() {
           <p className="list_heading">Colors</p>
           <p
             className={
-              !colorFilter && !materialFilter ? "list list_active" : "list"
+              !colorFilter || state.resetFilters ? "list list_active" : "list"
             }
-            onClick={handleAll}
+            onClick={() => handleAll("color")}
           >
             All
           </p>
@@ -113,7 +157,9 @@ function Main() {
                 onClick={() => handleColorFilter(color.id)}
                 key={color.id}
                 className={
-                  color.id === colorFilter ? "list list_active" : "list"
+                  color.id === colorFilter && !state.resetFilters
+                    ? "list list_active"
+                    : "list"
                 }
               >
                 {color.name}
@@ -123,7 +169,7 @@ function Main() {
         </div>
       </section>
       <section className="right">
-        <div className="products_container">
+        <div ref={mainref} className="products_container">
           {currentProducts &&
             currentProducts.map((product) => {
               return <Card key={product.id} data={product} />;

@@ -4,6 +4,7 @@ import React, { createContext, useReducer } from "react";
 const initialState = {
   cartOpen: false,
   cart: JSON.parse(localStorage.getItem("cart")) || [],
+  resetFilters: false,
   data: {
     products: [],
     colors: [],
@@ -33,6 +34,8 @@ const reducer = (state, action) => {
       return { ...state, cartOpen: !state.cartOpen };
     case "CART_OPEN":
       return { ...state, cartOpen: !state.true };
+    case "RESET_FILTERS":
+      return { ...state, resetFilters: action.payload };
 
     default:
       return state;

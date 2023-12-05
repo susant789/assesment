@@ -29,40 +29,39 @@
         cursor: pointer;
       }
 
+      .white {
+        color: var(--white);
+      }
+
+      .light-white {
+        color: var(--light-white);
+      }
+
+      .black {
+        color: #000;
+      }
+
+      .light-grey {
+        color: #555;
+      }
+
       .nav_element {
         margin-left: 2.5rem;
-        color: var(--white);
         font-size: 1rem;
         cursor: pointer;
         font-weight: 600;
       }
 
-      .sec_nav_element {
-        color: var(--light-white);
-        margin-left: 2.5rem;
-        font-size: 1rem;
-        cursor: pointer;
-        font-weight: 600;
+      .non-active {
+        transition: all 0.2s;
       }
-
-      .nav_element_change {
-        color: #000;
-        margin-left: 2.5rem;
-        font-size: 1rem;
-        cursor: pointer;
-        font-weight: 600;
+      .non-active:hover {
+        transform: scale(1.05);
       }
 
       .img_change {
         filter: invert(100%);
         margin-left: 2.5rem;
-      }
-      .sec_nav_element_change {
-        color: #555;
-        margin-left: 2.5rem;
-        font-size: 1rem;
-        cursor: pointer;
-        font-weight: 600;
       }
     }
   }

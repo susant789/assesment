@@ -14,4 +14,5 @@ export const CART_TOGGLE = "CART_TOGGLE";
 export const CART_OPEN = "CART_OPEN";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 export const FILTER_PRODUCTS = "FILTER_PRODUCTS";
+export const RESET_FILTERS = "RESET_FILTERS";
 export const DATA = "DATA";

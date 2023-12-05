@@ -5,11 +5,14 @@ import "./Header.scss";
 import Cart from "./Cart";
 import { useContext } from "react";
 import { AppContext } from "../Context";
-import { CART_TOGGLE } from "../constants";
+import { CART_TOGGLE, DATA, RESET_FILTERS } from "../constants";
+import { fetchFeatured } from "../services";
 
-function Header() {
+function Header({ scrollMain }) {
   const { state, dispatch } = useContext(AppContext);
   const [hand, setHand] = useState(false);
+
+  let featuredProductsData = state.data.featured;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +30,43 @@ function Header() {
     };
   }, []);
 
+  const handleFeaturedProducts = async () => {
+    const res = await fetchFeatured();
+    const products = state.data.products;
+    let dictionary = products.reduce((acc, product) => {
+      acc[product.id] = product;
+      return acc;
+    }, {});
+
+    let featuredProducts = res.map((item) => dictionary[item.productId]);
+
+    dispatch({
+      type: DATA,
+      payload: {
+        ...state.data,
+        filtered: featuredProducts,
+        featured: featuredProducts,
+      },
+    });
+    dispatch({ type: RESET_FILTERS, payload: true });
+
+    scrollMain.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleAllProducts = () => {
+    dispatch({
+      type: DATA,
+      payload: {
+        ...state.data,
+        filtered: state.data.products,
+        featured: [],
+      },
+    });
+    dispatch({ type: RESET_FILTERS, payload: true });
+
+    scrollMain.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <header>
       <div className="header">
@@ -36,17 +76,29 @@ function Header() {
           </div>
           <div className="nav_right">
             <p
+              onClick={handleAllProducts}
               className={
-                hand || state.cartOpen ? "nav_element_change" : "nav_element"
+                (hand || state.cartOpen) && !featuredProductsData.length
+                  ? "nav_element black"
+                  : !(hand || state.cartOpen) && !featuredProductsData.length
+                  ? "nav_element white"
+                  : (hand || state.cartOpen) && featuredProductsData.length
+                  ? "nav_element black nav_element light-grey non-active"
+                  : "nav_element light-white non-active"
               }
             >
               All Products
             </p>
             <p
+              onClick={handleFeaturedProducts}
               className={
-                hand || state.cartOpen
-                  ? "nav_element_change sec_nav_element_change"
-                  : "nav_element sec_nav_element"
+                (hand || state.cartOpen) && featuredProductsData.length
+                  ? "nav_element black"
+                  : !(hand || state.cartOpen) && featuredProductsData.length
+                  ? "nav_element white"
+                  : (hand || state.cartOpen) && !featuredProductsData.length
+                  ? "nav_element light-grey non-active"
+                  : "nav_element light-white non-active"
               }
             >
               Feature Products
@@ -62,7 +114,9 @@ function Header() {
             />
             <p
               className={
-                hand || state.cartOpen ? "nav_element_change" : "nav_element"
+                hand || state.cartOpen
+                  ? "nav_element black"
+                  : "nav_element white"
               }
             >
               {state.cart.length}
