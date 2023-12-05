@@ -1,4 +1,4 @@
-Hosted link - https://susants-assignment.netlify.app/ 
+Hosted link - https://susants-assesment.netlify.app/ 
 
 # Getting Started with Create React App
 
