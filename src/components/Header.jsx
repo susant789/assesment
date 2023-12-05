@@ -16,7 +16,9 @@ function Header({ scrollMain }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 680) {
+      const threshold = window.innerHeight * 0.97;
+
+      if (window.scrollY > threshold) {
         setHand(true);
       } else {
         setHand(false);
